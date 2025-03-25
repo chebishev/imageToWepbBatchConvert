@@ -12,4 +12,5 @@ This version of the program is currently working on Windows OS, but you can make
 
 Click on the image to see the demo in YouTube:
 <br>
-[![DEMO](webpbatchconvert.png)](https://youtu.be/Tt3T_vvO8io)
+[![OLD DEMO](webpbatchconvert.webp)](https://youtu.be/Tt3T_vvO8io)
+[![NEW DEMO](new_webp_batch_convert.webp)](https://youtu.be/S-FxQQeTzZw)

@@ -15,6 +15,6 @@ invalid_command = "Invalid command!"
 quality_prompt = """2. Choose the quality of the image(s) (0-100):
         0 - worst quality and smallest file size
         100 - best quality and largest file size
-        or press ENTER for default quality (75)"""
+        or press ENTER for default quality (75): """
 static_image_quality = "Converting static image... Applying quality settings."
 animated_image_quality = "Converting animated GIF... Applying quality settings."
