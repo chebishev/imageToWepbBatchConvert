@@ -10,7 +10,7 @@ The program will show them in the REPORT anyway with warning message that they m
 
 This version of the program is currently working on Windows OS, but you can make changes for your desired OS in "config.py"
 
-Click on the image to see the demo in YouTube:
+Click on the images to see the Old or the New demo in YouTube:
 <br>
 [![OLD DEMO](webpbatchconvert.webp)](https://youtu.be/Tt3T_vvO8io)
 [![NEW DEMO](new_webp_batch_convert.webp)](https://youtu.be/S-FxQQeTzZw)
