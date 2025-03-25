@@ -2,26 +2,26 @@ import os
 import time
 import subprocess
 from pathlib import Path
-from PIL import Image  # Used to detect animated GIFs
+from PIL import Image
 import messages as msg
 from initial_message import start
-import config  # Import the config file
+import config 
 
 VALID_STATIC_EXTENSIONS = ["png", "jpeg", "jpg", "tiff", "webp"]
-VALID_ANIMATED_EXTENSIONS = ["gif"]  # Only GIFs can be animated
+VALID_ANIMATED_EXTENSIONS = ["gif"]
 
 
 class WebPConverter:
     def __init__(self, input_dir=config.INPUT_DIR, output_dir=config.OUTPUT_DIR, quality=config.DEFAULT_QUALITY, reduce_frames=False, split_frames=False):
         self.input_dir = Path(input_dir)
         self.output_dir = Path(output_dir)
-        self._quality = quality  # Private variable for quality
+        self._quality = quality
         self.reduce_frames = reduce_frames
         self.split_frames = split_frames
         self.valid_files = []
         self.report = []
 
-        self.output_dir.mkdir(exist_ok=True)  # Ensure output directory exists
+        self.output_dir.mkdir(exist_ok=True)
 
     @property
     def quality(self):
@@ -84,17 +84,17 @@ class WebPConverter:
         if not files:
             print(msg.empty_folder)
             self.check_folder()
-            return self.convert_images()  # Retry if the folder is empty
+            return self.convert_images()
 
         for file in files:
             ext = file.suffix.lower().lstrip(".")
             output_file = self.output_dir / f"{file.stem}.webp"
 
             if ext in VALID_STATIC_EXTENSIONS:
-                print(msg.static_image_quality)  # Message for static images
+                print(msg.static_image_quality) 
                 self.convert_static_image(file, output_file)
             elif ext in VALID_ANIMATED_EXTENSIONS and self.is_animated_gif(file):
-                print(msg.animated_image_quality)  # Message for animated images
+                print(msg.animated_image_quality)
                 self.convert_animated_gif(file)
             else:
                 self.report.append(f'Unsupported file "{file.name}" - conversion may not work.')
@@ -106,7 +106,7 @@ class WebPConverter:
         self.valid_files.append(input_file.name)
         cmd = [config.CWEBP_PATH, str(input_file), "-o", str(output_file), "-q", str(self.quality)]
         subprocess.run(cmd, check=True)
-        time.sleep(1)  # Prevent overloading CPU
+        time.sleep(1)
 
     def convert_animated_gif(self, input_file):
         """Convert an animated GIF to WebP using gif2webp."""
@@ -115,7 +115,6 @@ class WebPConverter:
         cmd = [config.GIF2WEBP_PATH, str(input_file), "-o", str(base_output) + ".webp"]
 
         if self.split_frames:
-            # Extract frames separately
             frame_number = 0
             with Image.open(input_file) as img:
                 while True:
@@ -129,14 +128,11 @@ class WebPConverter:
             self.valid_files.append(f"{input_file.name} (split into {frame_number} frames)")
 
         else:
-            # Convert GIF as a single animated WebP
             if self.reduce_frames:
-                # Use -mixed for frame reduction, no quality (-q) specified
                 cmd.append("-mixed")
             else:
-                # Standard conversion with lossy compression and quality setting
                 cmd.append("-lossy")
-                cmd.append("-q")  # Add quality flag here
+                cmd.append("-q")
                 cmd.append(str(self.quality))
 
             subprocess.run(cmd, check=True)
@@ -160,20 +156,16 @@ if __name__ == "__main__":
     start()
     print(msg.files_placement)
 
-    # Initialize the WebPConverter instance
     converter = WebPConverter()
 
-    # Get the user's quality input and set it
     quality_value = input(msg.quality_prompt)
-    converter.quality = quality_value  # Use the setter to validate and set the quality
+    converter.quality = quality_value
 
-    # User options for frame handling
     reduce_frames = input("3. Reduce redundant frames in animated GIFs? (y/n): ").strip().lower() == "y"
     split_frames = input("4. Split GIF into individual frames? (y/n): ").strip().lower() == "y"
 
     converter.reduce_frames = reduce_frames
     converter.split_frames = split_frames
 
-    # Proceed with conversion
     converter.check_folder()
     converter.convert_images()
