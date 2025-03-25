@@ -6,5 +6,6 @@ GIF2WEBP_PATH = "webp_convert/bin/gif2webp.exe"
 DEFAULT_QUALITY = 75
 
 # Default paths for input and output directories
+# The variables are used in the welcome message too
 INPUT_DIR = "in"
 OUTPUT_DIR = "out"

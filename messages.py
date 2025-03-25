@@ -1,4 +1,5 @@
 import config
+
 """
 This file holds the messages in the project
 Mostly for better abstraction

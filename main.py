@@ -12,7 +12,14 @@ VALID_ANIMATED_EXTENSIONS = ["gif"]
 
 
 class WebPConverter:
-    def __init__(self, input_dir=config.INPUT_DIR, output_dir=config.OUTPUT_DIR, quality=config.DEFAULT_QUALITY, reduce_frames=False, split_frames=False):
+    def __init__(
+        self, 
+        input_dir=config.INPUT_DIR, 
+        output_dir=config.OUTPUT_DIR, 
+        quality=config.DEFAULT_QUALITY, 
+        reduce_frames=False, 
+        split_frames=False):
+        
         self.input_dir = Path(input_dir)
         self.output_dir = Path(output_dir)
         self._quality = quality
@@ -136,6 +143,10 @@ class WebPConverter:
                 cmd.append(str(self.quality))
 
             subprocess.run(cmd, check=True)
+            # returns message in format "Saved output file (xxxxxx bytes): "
+            # + first letter of the file path
+            # example output: "Saved output file (991850 bytes): o", 
+            # because the output folder is named "out"
             self.valid_files.append(input_file.name)
 
 
