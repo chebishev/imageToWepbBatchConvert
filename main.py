@@ -4,26 +4,64 @@ import subprocess
 from pathlib import Path
 from PIL import Image  # Used to detect animated GIFs
 import messages as msg
-import get_quailty
 from initial_message import start
+import config  # Import the config file
 
 VALID_STATIC_EXTENSIONS = ["png", "jpeg", "jpg", "tiff", "webp"]
 VALID_ANIMATED_EXTENSIONS = ["gif"]  # Only GIFs can be animated
-CWEBP_PATH = "webp_convert/bin/cwebp.exe"
-GIF2WEBP_PATH = "webp_convert/bin/gif2webp.exe"
 
 
 class WebPConverter:
-    def __init__(self, input_dir="in", output_dir="out", quality=75, reduce_frames=False, split_frames=False):
+    def __init__(self, input_dir=config.INPUT_DIR, output_dir=config.OUTPUT_DIR, quality=config.DEFAULT_QUALITY, reduce_frames=False, split_frames=False):
         self.input_dir = Path(input_dir)
         self.output_dir = Path(output_dir)
-        self.quality = quality
+        self._quality = quality  # Private variable for quality
         self.reduce_frames = reduce_frames
         self.split_frames = split_frames
         self.valid_files = []
         self.report = []
 
         self.output_dir.mkdir(exist_ok=True)  # Ensure output directory exists
+
+    @property
+    def quality(self):
+        """Getter for quality."""
+        return self._quality
+
+    @quality.setter
+    def quality(self, value):
+        """Setter for quality, ensuring it's within the 0-100 range or defaults to a pre-set value."""
+        max_quality = 100
+        default_quality = config.DEFAULT_QUALITY
+
+        if value == "":
+            self._quality = default_quality
+            return
+        
+        try:
+            value = int(value)
+        except ValueError:
+            print(msg.invalid_command)
+            value = -1
+
+        if 0 <= value <= max_quality:
+            self._quality = value
+        else:
+            print(msg.invalid_command)
+            while not (0 <= value <= max_quality):
+                try:
+                    value = input(msg.quality_prompt)
+                    if value == "":
+                        self._quality = default_quality
+                        return
+                    value = int(value)
+                except ValueError:
+                    value = -1
+                if 0 <= value <= max_quality:
+                    self._quality = value
+                else:
+                    print(msg.invalid_command)
+
 
     def check_folder(self):
         """Wait for user confirmation to proceed."""
@@ -53,8 +91,10 @@ class WebPConverter:
             output_file = self.output_dir / f"{file.stem}.webp"
 
             if ext in VALID_STATIC_EXTENSIONS:
+                print(msg.static_image_quality)  # Message for static images
                 self.convert_static_image(file, output_file)
             elif ext in VALID_ANIMATED_EXTENSIONS and self.is_animated_gif(file):
+                print(msg.animated_image_quality)  # Message for animated images
                 self.convert_animated_gif(file)
             else:
                 self.report.append(f'Unsupported file "{file.name}" - conversion may not work.')
@@ -64,13 +104,15 @@ class WebPConverter:
     def convert_static_image(self, input_file, output_file):
         """Convert a static image to WebP using cwebp."""
         self.valid_files.append(input_file.name)
-        cmd = [CWEBP_PATH, str(input_file), "-o", str(output_file), "-q", str(self.quality)]
+        cmd = [config.CWEBP_PATH, str(input_file), "-o", str(output_file), "-q", str(self.quality)]
         subprocess.run(cmd, check=True)
         time.sleep(1)  # Prevent overloading CPU
 
     def convert_animated_gif(self, input_file):
         """Convert an animated GIF to WebP using gif2webp."""
         base_output = self.output_dir / input_file.stem
+
+        cmd = [config.GIF2WEBP_PATH, str(input_file), "-o", str(base_output) + ".webp"]
 
         if self.split_frames:
             # Extract frames separately
@@ -88,12 +130,18 @@ class WebPConverter:
 
         else:
             # Convert GIF as a single animated WebP
-            output_file = f"{base_output}.webp"
-            cmd = [GIF2WEBP_PATH, str(input_file), "-o", output_file, "-q", str(self.quality)]
             if self.reduce_frames:
-                cmd.append("-mixed")  # Reduces redundant frames to optimize size
+                # Use -mixed for frame reduction, no quality (-q) specified
+                cmd.append("-mixed")
+            else:
+                # Standard conversion with lossy compression and quality setting
+                cmd.append("-lossy")
+                cmd.append("-q")  # Add quality flag here
+                cmd.append(str(self.quality))
+
             subprocess.run(cmd, check=True)
             self.valid_files.append(input_file.name)
+
 
     def print_report(self):
         """Display conversion results."""
@@ -112,12 +160,20 @@ if __name__ == "__main__":
     start()
     print(msg.files_placement)
 
-    quality_value = get_quailty.quality(int(input(msg.quality_prompt)))
+    # Initialize the WebPConverter instance
+    converter = WebPConverter()
+
+    # Get the user's quality input and set it
+    quality_value = input(msg.quality_prompt)
+    converter.quality = quality_value  # Use the setter to validate and set the quality
 
     # User options for frame handling
-    reduce_frames = input("Reduce redundant frames in animated GIFs? (y/n): ").strip().lower() == "y"
-    split_frames = input("Split GIF into individual frames? (y/n): ").strip().lower() == "y"
+    reduce_frames = input("3. Reduce redundant frames in animated GIFs? (y/n): ").strip().lower() == "y"
+    split_frames = input("4. Split GIF into individual frames? (y/n): ").strip().lower() == "y"
 
-    converter = WebPConverter(quality=quality_value, reduce_frames=reduce_frames, split_frames=split_frames)
+    converter.reduce_frames = reduce_frames
+    converter.split_frames = split_frames
+
+    # Proceed with conversion
     converter.check_folder()
     converter.convert_images()
