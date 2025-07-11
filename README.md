@@ -1,4 +1,5 @@
 🖼️ Image to WebP Batch Convert
+
 Batch convert static and animated images to .webp format using Google’s [libwebp](https://chromium.googlesource.com/webm/libwebp/) engine.
 
 This lightweight Python tool uses the native binaries from [WebP’s official releases](https://storage.googleapis.com/downloads.webmproject.org/releases/webp/index.html), bundled inside the project (in the webp_convert folder). The latest included version is libwebp 1.5.0
