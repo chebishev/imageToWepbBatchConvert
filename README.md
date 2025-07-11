@@ -1,10 +1,10 @@
-🖼️ Image to WebP Batch Convert
+# 🖼️ Image to WebP Batch Convert
 
 Batch convert static and animated images to .webp format using Google’s [libwebp](https://chromium.googlesource.com/webm/libwebp/) engine.
 
 This lightweight Python tool uses the native binaries from [WebP’s official releases](https://storage.googleapis.com/downloads.webmproject.org/releases/webp/index.html), bundled inside the project (in the webp_convert folder). The latest included version is libwebp 1.5.0
 
-✅ Features
+# ✅ Features
 * Batch convert images to WebP
 
 * Supports static and animated formats
@@ -17,14 +17,14 @@ This lightweight Python tool uses the native binaries from [WebP’s official re
 
 * CLI-based, lightweight, and dependency-free (except for Python and Pillow)
 
-📺 Demo
+# 📺 Demo
 
 Click on the images bellow to see the tool in action:
 <br>
 [![OLD DEMO](webpbatchconvert.webp)](https://youtu.be/Tt3T_vvO8io)
 [![NEW DEMO](new_webp_batch_convert.webp)](https://youtu.be/S-FxQQeTzZw)
 
-⚙️ Platform Support
+# ⚙️ Platform Support
 
 🪟 Windows:
 
@@ -34,7 +34,7 @@ Click on the images bellow to see the tool in action:
 
 You can adapt the config by modifying config.py to use system-installed WebP binaries or adjust paths accordingly.
 
-📦 Usage
+# 📦 Usage
 
 ⚠️ Requires Python and Pillow installed.
 
@@ -56,12 +56,12 @@ pip install -r requirements.txt
 ```bash
 python main.py
 ```
-🚫 Notes
+# 🚫 Notes
 * Files not in the supported list will still be attempted, but you’ll get a warning in the report if output might be unusable.
 
 * For animated GIFs, ensure the input file is valid and properly formatted.
 
-📁 Structure
+# 📁 Structure
 ```bash
 .
 ├── webp_convert/               # Contains extracted libwebp binaries (Windows)
@@ -72,5 +72,5 @@ python main.py
 ├── requirements.txt            # Python dependencies
 └── webpbatchconvert.webp       # old demo thumbnail
 ```
-📝 License
+# 📝 License
 MIT License © [Atanas Chebishev](https://github.com/chebishev)
