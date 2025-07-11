@@ -20,7 +20,8 @@ This lightweight Python tool uses the native binaries from [WebP’s official re
 # 📺 Demo
 
 Click on the images bellow to see the tool in action:
-- in order of appearance: Old demo, New demo
+
+(in order of appearance: Old demo, New demo)  
 <br>
 [![OLD DEMO](webpbatchconvert.webp)](https://youtu.be/Tt3T_vvO8io)
 [![NEW DEMO](new_webp_batch_convert.webp)](https://youtu.be/S-FxQQeTzZw)
