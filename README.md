@@ -24,11 +24,17 @@ Click on the images bellow to see the tool in action:
 [![NEW DEMO](new_webp_batch_convert.webp)](https://youtu.be/S-FxQQeTzZw)
 
 ⚙️ Platform Support
-🪟 Windows (fully supported out of the box)
 
-🐧 Linux / macOS: You can adapt the config by modifying config.py to use system-installed WebP binaries or adjust paths accordingly.
+🪟 Windows:
+
+(fully supported out of the box)
+
+🐧 Linux / macOS: 
+
+You can adapt the config by modifying config.py to use system-installed WebP binaries or adjust paths accordingly.
 
 📦 Usage
+
 ⚠️ Requires Python and Pillow installed.
 
 1. Clone the repository
